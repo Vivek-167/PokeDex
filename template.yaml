@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  PokeDex
+
+  Sample SAM Template for PokeDex
+
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  PokemonApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: pokemon-api/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        Pokemon:
+          Type: Api
+          Properties:
+            Path: /pokemon
+            Method: get
+
+Outputs:
+  PokemonApi:
+    Description: "API Gateway endpoint URL for Prod stage for Pokemon function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/pokemon/"
+  PokemonFunction:
+    Description: "Pokemon Lambda Function ARN"
+    Value: !GetAtt PokemonFunction.Arn
+  PokemonFunctionIamRole:
+    Description: "Implicit IAM Role created for Pokemon function"
+    Value: !GetAtt PokemonFunctionRole.Arn
